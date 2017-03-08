@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Gear Sheet</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script type="text/babel">
+    const parseJSON = (xhr, content) => {
+      const obj = JSON.parse(xhr.response);
+      console.dir(obj);
+      
+      if(obj.message) {
+        const p = document.createElement('p');
+        p.textContent = `Message: ${obj.message}`;
+        content.appendChild(p);
+      }
+      
+      if(obj.gear) {
+        console.log(obj.gear)
+                
+        const gearList = document.createElement('p');
+        const gear = JSON.stringify(obj.gear);
+        
+        for (var name in obj.gear){
+            if (obj.gear.hasOwnProperty(name)){
+            console.log(obj.gear[name])
+            
+            gearList.innerHTML += " <h3>" + obj.gear[name].name + "</h3><br> ";
+            gearList.innerHTML += "<b>Head:</b> " + obj.gear[name].head + " ";
+            gearList.innerHTML += "<b>Chest:</b> " + obj.gear[name].chest + " ";
+            gearList.innerHTML += "<b>Arms:</b> " + obj.gear[name].arms + " ";
+            gearList.innerHTML += "<b>Legs:</b> " + obj.gear[name].legs + " ";
+            gearList.innerHTML += "<b>Feet:</b> " + obj.gear[name].feet + "<br> ";
+            
+            
+            }
+        }
+        
+        //gearList.textContent = gear;
+        content.appendChild(gearList);
+      }
+    };
+
+    const handleResponse = (xhr) => {
+      const content = document.querySelector('#content');
+
+      switch(xhr.status) {
+        case 200:
+          content.innerHTML = `<b>Success</b>`;
+          break;
+        case 201:
+          content.innerHTML = '<b>Create</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>Updated (No Content)</b>';
+          return;
+        case 400:
+          content.innerHTML = `<b>Bad Request</b>`;
+          break;
+        default:
+          content.innerHTML = `<b>Resource Not Found</b>`;
+          break;
+      }
+
+      parseJSON(xhr, content);
+    };
+
+    const requestUpdate = (e, selectForm) => {
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('get', '/getGear');
+
+      xhr.setRequestHeader('Accept', 'application/json');
+
+      xhr.onload = () => handleResponse(xhr, true);
+
+      xhr.send();
+      e.preventDefault();
+      return false;
+    };
+
+    const sendPost = (e, gearForm) => {
+    console.log("Begin");
+
+      const nameAction = gearForm.getAttribute('action');
+      const nameMethod = gearForm.getAttribute('method');
+      
+      const nameField = gearForm.querySelector('#nameField');
+      const headField = gearForm.querySelector('#headField');
+      const chestField = gearForm.querySelector('#chestField');
+      const armsField = gearForm.querySelector('#armsField');
+      const legsField = gearForm.querySelector('#legsField');
+      const feetField = gearForm.querySelector('#feetField');
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.open(nameMethod, nameAction);
+
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+      xhr.setRequestHeader ('Accept', 'application/json');
+      
+      xhr.onload = () => handleResponse(xhr);
+      
+      const formData = `name=${nameField.value}&head=${headField.value}&chest=${chestField.value}&arms=${armsField.value}&legs=${legsField.value}&feet=${feetField.value}`;
+
+      xhr.send(formData);
+      e.preventDefault();
+      return false;
+    };
+
+    const init = () => {
+      const selectForm = document.querySelector('#selectForm');
+      
+      const addGear = (e) => sendPost(e, gearForm);
+      const getGear = (e) => requestUpdate(e, selectForm);
+      
+      selectForm.addEventListener('submit', getGear);
+      gearForm.addEventListener('submit', addGear);
+    };
+
+    window.onload = init;
+
+  </script>
+</head>
+<body>
+  <section id="top">
+    <h1>Personal Gear Sheet</h1>
+    <form id="gearForm" action="/addGear" method="post">
+      <label for="name">Name of Set: </label>
+      <input id="nameField" type="text" name="name" />
+      <br>
+      <label for="head">Head: </label>
+      <input id="headField" type="text" name="head" />
+      <br>
+      <label for="chest">Chest: </label>
+      <input id="chestField" type="text" name="chest" />
+      <br>
+      <label for="arms">Arms: </label>
+      <input id="armsField" type="text" name="arms" />
+      <br>
+      <label for="legs">Legs: </label>
+      <input id="legsField" type="text" name="legs" />
+      <br>
+      <label for="feet">Feet: </label>
+      <input id="feetField" type="text" name="feet" />
+      <br>
+        
+      <input type="submit" value="Add Gear" />
+    </form>
+    <form id="selectForm" action="/getGear" method="get">
+
+      <input type="submit" value="Get Gear" />
+    </form>
+  </section>
+  <section id="content">
+  </section>
+</body>
+</html>

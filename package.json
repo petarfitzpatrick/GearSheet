@@ -1,0 +1,20 @@
+{
+  "name": "gear-sheet",
+  "version": "1.0.0",
+  "description": "an app to enter gear obtained in video games",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "test": "echo \"Error: no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petarfitzpatrick/GearSheet.git"
+  },
+  "author": "Peter Fitzpatrick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/petarfitzpatrick/GearSheet/issues"
+  },
+  "homepage": "https://github.com/petarfitzpatrick/GearSheet#readme"
+}
