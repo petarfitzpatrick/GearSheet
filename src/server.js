@@ -36,6 +36,7 @@ const onRequest = (request, response) => {
   console.log(request.url);
     
   const parsedUrl = url.parse(request.url);
+  const params = query.parse(parsedUrl.query);
     
   switch (request.method) {
     case 'POST':
@@ -51,7 +52,7 @@ const onRequest = (request, response) => {
       } else if (parsedUrl.pathname === '/style.css') {
         htmlHandler.getStyle(request, response);
       } else if (parsedUrl.pathname === '/getGear') {
-        jsonHandler.getGear(request, response);
+        jsonHandler.getGear(request, response, params);
       } else if (parsedUrl.pathname === '/updateGear') {
         jsonHandler.updateGear(request, response);
       } else {

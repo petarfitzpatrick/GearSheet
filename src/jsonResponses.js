@@ -1,3 +1,4 @@
+//Code borrowed from Cody's example API assignments
 const crypto = require('crypto');
 
 const gear = {};
@@ -22,12 +23,21 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
-const getGear = (request, response) => {
+const getGear = (request, response, params) => {
   const responseJSON = {
     gear,
   };
+    
+  var publicJSON = JSON.parse(JSON.stringify(responseJSON));
+  delete publicJSON.gear.secret;
+  console.log(responseJSON);
+  console.log(publicJSON);
 
+  if (params.secret == 'true'){
   return respondJSON(request, response, 200, responseJSON);
+  }
+    
+  return respondJSON(request, response, 200, publicJSON);
 };
 
 const getGearMeta = (request, response) => {
@@ -35,7 +45,7 @@ const getGearMeta = (request, response) => {
     return respondJSONMeta(request, response, 304);
   }
 
-  return respondJSONMeta(request, response, 200);
+  return respondJSONMeta(request, response, 304);
 };
 
 
@@ -76,6 +86,7 @@ const addGear = (request, response, body) => {
   gear[body.name].arms = body.arms;
   gear[body.name].legs = body.legs;
   gear[body.name].feet = body.feet;
+  gear[body.name].picture = body.picture;
 
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/petarfitzpatrick/GearSheet/issues"
   },
-  "homepage": "https://github.com/petarfitzpatrick/GearSheet#readme"
+  "homepage": "https://github.com/petarfitzpatrick/GearSheet#readme",
+  "devDependencies": {
+    "eslint-config-airbnb": "^14.1.0"
+  }
 }
