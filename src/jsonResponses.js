@@ -30,10 +30,11 @@ const getGear = (request, response, params) => {
     
   var publicJSON = JSON.parse(JSON.stringify(responseJSON));
   delete publicJSON.gear.secret;
+  delete publicJSON.gear.Secret;
   console.log(responseJSON);
   console.log(publicJSON);
 
-  if (params.secret == 'true'){
+  if (params.secret == 'true' || params.Secret == 'true'){
   return respondJSON(request, response, 200, responseJSON);
   }
     
